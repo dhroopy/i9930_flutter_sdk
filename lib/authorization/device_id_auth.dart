@@ -4,25 +4,28 @@ import 'package:i9930_flutter_sdk/env/env.dart';
 
 import 'auth.dart';
 import 'auth_request.dart';
+import 'http_auth_datasource.dart';
 
 class DeviceIdAuth extends Auth {
-  AuthParam param;
-  AuthRepoImpl authRepoImpl;
+  AuthRepoImpl? authRepoImpl;
 
   DeviceIdAuth({
-    required this.param,
-    required this.authRepoImpl,
+    this.authRepoImpl,
   });
 
   @override
-  Future<AuthenticationResponse> login() async {
+  Future<AuthenticationResponse> login({required AuthParam authParam}) async {
     assert(I9930Sdk.env != null);
+
+    authRepoImpl ??= AuthRepoImpl(dataSource: HttpAuthDataSource());
+
     Map data = {};
-    data["email"] = param.userContactInfo;
-    data["password"] = param.deviceId;
-    if (param.otp != null) {
-      data["otp"] = param.otp;
+    data["email"] = authParam.userContactInfo;
+    data["password"] = authParam.deviceId;
+    if (authParam.otp != null) {
+      data["otp"] = authParam.otp;
     }
-    return await authRepoImpl.login(request: data, endpoint: I9930Sdk.env!.authEndpoint.toString());
+    return await authRepoImpl!
+        .login(request: data, endpoint: I9930Sdk.env!.authEndpoint.toString());
   }
 }
