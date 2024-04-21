@@ -1,11 +1,10 @@
-import 'package:i9930_flutter_sdk/authorization/auth_request.dart';
-import 'package:i9930_flutter_sdk/authorization/authentication_response.dart';
-
-import 'auth.dart';
+import 'package:i9930_flutter_sdk/authorization/auth_token_refresher.dart';
+import 'package:i9930_flutter_sdk/authorization/authorization.dart';
 import 'device_id_auth.dart';
 
 class I9930AuthService {
-  late Auth auth;
+  static late Auth auth;
+  static late AuthTokenRefresher tokenRefresher;
 
   static Future<void> authWithDeviceId(
       {required AuthParam authParam,
@@ -13,8 +12,7 @@ class I9930AuthService {
       required Function(int, String) onFaiulure,
       required Function(String) onOtpSent,
       required Function(Object error) onError}) async {
-    
-    Auth auth = DeviceIdAuth();
+    auth = DeviceIdAuth();
     await auth.login(authParam: authParam).then((loginResponse) {
       if (loginResponse.statusCode == 0) {
         onSuccess(loginResponse);
@@ -35,5 +33,36 @@ class I9930AuthService {
     }).onError((error, stackTrace) {
       onError(error!);
     });
+  }
+
+  static Future<AuthenticationResponse?> refreshToken({
+    required AuthenticationData authInfo,
+    Function(AuthenticationResponse)? onSuccess,
+    Function(int, String)? onFaiulure,
+  }) async {
+    tokenRefresher = ApiTokenRefresher();
+    AuthenticationResponse? response;
+    await tokenRefresher
+        .refreshToken(authInfo: authInfo)
+        .then((updateAuthData) {
+      if (updateAuthData.statusCode == 0) {
+        if (onSuccess != null) {
+          onSuccess(updateAuthData);
+        }
+        response = updateAuthData;
+      } else {
+        //Any other error or failure.
+        if (onFaiulure != null) {
+          onFaiulure(updateAuthData.statusCode!, updateAuthData.msg.toString());
+        }
+        response = null;
+      }
+    }).onError((error, stackTrace) {
+      if (onFaiulure != null) {
+        onFaiulure(500, error.toString());
+        response = null;
+      }
+    });
+    return response;
   }
 }

@@ -1,13 +1,10 @@
-import 'package:i9930_flutter_sdk/authorization/auth_repo_impl.dart';
-import 'package:i9930_flutter_sdk/authorization/authentication_response.dart';
+import 'package:i9930_flutter_sdk/authorization/authorization.dart';
 import 'package:i9930_flutter_sdk/env/env.dart';
 
-import 'auth.dart';
-import 'auth_request.dart';
 import 'http_auth_datasource.dart';
 
 class DeviceIdAuth extends Auth {
-  AuthRepoImpl? authRepoImpl;
+  AuthRepo? authRepoImpl;
 
   DeviceIdAuth({
     this.authRepoImpl,

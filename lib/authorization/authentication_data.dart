@@ -1,34 +1,22 @@
-import 'package:i9930_flutter_sdk/authorization/auth_details.dart';
+abstract class AuthenticationData {
+  String? userId;
+  String? accessToken;
+  String? refreshToken;
+  String? accessTokenExpiry;
+  String? refreshTokenExpiry;
+  String? oldTimestamp;
+  String? lastLogin;
 
-class AuthDetails extends AuthenticationData {
-  AuthDetails(
-      {super.userId,
-      super.accessToken,
-      super.refreshToken,
-      super.accessTokenExpiry,
-      super.refreshTokenExpiry,
-      super.lastLogin});
+  AuthenticationData(
+      {this.userId,
+      this.accessToken,
+      this.refreshToken,
+      this.accessTokenExpiry,
+      this.refreshTokenExpiry,
+      this.oldTimestamp,
+      this.lastLogin});
 
-  @override
-  AuthenticationData fromJson(Map<String, dynamic> json) {
-    return AuthDetails(
-        userId: json["user_id"].toString(),
-        accessToken: json["access_token"].toString(),
-        refreshToken: json["refresh_token"].toString(),
-        accessTokenExpiry: json["access_token_expiry"].toString(),
-        refreshTokenExpiry: json["refresh_token_expiry"].toString(),
-        lastLogin: json["last_login"].toString());
-  }
+  AuthenticationData fromJson(Map<String, dynamic> json);
 
-  @override
-  Map toJson() {
-    return {
-      "user_id": userId,
-      "access_token": accessToken,
-      "refresh_token": refreshToken,
-      "access_token_expiry": accessTokenExpiry,
-      "refresh_token_expiry": refreshTokenExpiry,
-      "last_login": lastLogin
-    };
-  }
+  Map toJson();
 }

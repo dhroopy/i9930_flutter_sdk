@@ -21,8 +21,8 @@ class AuthRepoImpl extends AuthRepo {
 
   @override
   Future<AuthenticationResponse> refreshToken(
-      {required Map request, required String endpoint}) {
-    // TODO: implement refreshToken
-    throw UnimplementedError();
+      {required Map request, required String endpoint}) async {
+    return AuthenticationResponse.fromJson(
+        await dataSource.post(requestFields: request, endpoint: endpoint));
   }
 }
