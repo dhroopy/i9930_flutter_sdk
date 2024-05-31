@@ -12,7 +12,7 @@ class HttpAuthDataSource extends AuthDataSource {
   HttpAuthDataSource({this.url, this.endpoint});
 
   @override
-  Future post({required Map requestFields, String? endpoint}) async {
+  Future post({required Map requestFields, String? endpoint, String? auth}) async {
     http.Client client = http.Client();
     url ??= I9930Sdk.env!.url!;
     endpoint ??= (this.endpoint ?? "");

@@ -1,7 +1,17 @@
 import 'dart:developer' as dev;
-
 abstract class Logger {
   void log();
+}
+
+class InfoLogger implements Logger {
+  String message;
+
+  InfoLogger({required this.message});
+
+  @override
+  void log() {
+    dev.log(message);
+  }
 }
 
 class ApiLogger implements Logger {
@@ -27,5 +37,4 @@ class ApiLogger implements Logger {
         ======================================\n
            """);
   }
-  
 }
